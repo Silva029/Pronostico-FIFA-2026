@@ -16,7 +16,12 @@ const FIFA2026PoolApp = () => {
   const [error, setError] = useState('');
   const [adminPassword, setAdminPassword] = useState('');
 
-
+  // Footer Component
+  const Footer = () => (
+    <div style={{ textAlign: 'center', padding: '2rem 1rem', borderTop: '1px solid rgba(0,0,0,0.1)', marginTop: '2rem', background: 'rgba(255,255,255,0.5)', color: '#64748b', fontSize: '12px', fontWeight: '500' }}>
+      <p style={{ margin: '0' }}>⚽ Made by Edi for fun purposes | Enjoy the Mundial in Peace! 🌍</p>
+    </div>
+  );
 
   // Initialize app
   useEffect(() => {
@@ -324,6 +329,8 @@ const FIFA2026PoolApp = () => {
           )}
         </div>
       </div>
+      <Footer />
+    </div>
     );
   }
 
@@ -347,6 +354,8 @@ const FIFA2026PoolApp = () => {
           <button onClick={() => setView('login')} style={{ width: '100%', marginTop: '1rem', padding: '12px', background: 'transparent', color: '#0070f3', border: '2px solid #0070f3', borderRadius: '8px', cursor: 'pointer', fontSize: '14px', fontWeight: '600' }}>← Volver</button>
         </div>
       </div>
+      <Footer />
+    </div>
     );
   }
 
@@ -416,6 +425,8 @@ const FIFA2026PoolApp = () => {
           </div>
         </div>
       </div>
+      <Footer />
+    </div>
     );
   }
 
@@ -486,6 +497,8 @@ const FIFA2026PoolApp = () => {
           </div>
         </div>
       </div>
+      <Footer />
+    </div>
     );
   }
 
@@ -538,6 +551,8 @@ const FIFA2026PoolApp = () => {
           </div>
         </div>
       </div>
+      <Footer />
+    </div>
     );
   }
 
@@ -609,6 +624,8 @@ const FIFA2026PoolApp = () => {
           ))}
         </div>
       </div>
+      <Footer />
+    </div>
     );
   }
 
@@ -678,6 +695,8 @@ const FIFA2026PoolApp = () => {
           </div>
         </div>
       </div>
+      <Footer />
+    </div>
     );
   }
 
@@ -742,6 +761,8 @@ const FIFA2026PoolApp = () => {
           ))}
         </div>
       </div>
+      <Footer />
+    </div>
     );
   }
 };
