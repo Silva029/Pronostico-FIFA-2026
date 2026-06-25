@@ -19,7 +19,7 @@ const FIFA2026PoolApp = () => {
   // Footer Component
   const Footer = () => (
     <div style={{ textAlign: 'center', padding: '2rem 1rem', borderTop: '1px solid rgba(0,0,0,0.1)', marginTop: '2rem', background: 'rgba(255,255,255,0.5)', color: '#64748b', fontSize: '12px', fontWeight: '500' }}>
-      <p style={{ margin: '0' }}>⚽ Made by Edi for fun purposes | Enjoy the Mundial in Peace! 🌍</p>
+      <p style={{ margin: '0' }}>⚽ Made by Edi for fun purposes | Enjoy the Mundial in Peace! 🌍 | Nothing Else Matters 🎵</p>
     </div>
   );
 
@@ -330,7 +330,6 @@ const FIFA2026PoolApp = () => {
         </div>
         <Footer />
       </div>
-    </div>
     );
   }
 
@@ -355,7 +354,6 @@ const FIFA2026PoolApp = () => {
         </div>
         <Footer />
       </div>
-    </div>
     );
   }
 
@@ -426,7 +424,6 @@ const FIFA2026PoolApp = () => {
         </div>
         <Footer />
       </div>
-    </div>
     );
   }
 
@@ -498,7 +495,6 @@ const FIFA2026PoolApp = () => {
         </div>
         <Footer />
       </div>
-    </div>
     );
   }
 
@@ -552,7 +548,6 @@ const FIFA2026PoolApp = () => {
         </div>
         <Footer />
       </div>
-    </div>
     );
   }
 
@@ -625,7 +620,6 @@ const FIFA2026PoolApp = () => {
         </div>
         <Footer />
       </div>
-    </div>
     );
   }
 
@@ -696,7 +690,6 @@ const FIFA2026PoolApp = () => {
         </div>
         <Footer />
       </div>
-    </div>
     );
   }
 
@@ -762,7 +755,6 @@ const FIFA2026PoolApp = () => {
         </div>
         <Footer />
       </div>
-    </div>
     );
   }
 };
