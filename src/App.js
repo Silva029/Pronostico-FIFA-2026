@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 
 const FIFA2026PoolApp = () => {
-  const ADMIN_PASSWORD = 'FastM1nd2026';
+  const ADMIN_PASSWORD = 'admin2026';
   const CURRENT_DATE = '2026-06-24';
   
   const [currentUser, setCurrentUser] = useState(null);
@@ -16,49 +16,7 @@ const FIFA2026PoolApp = () => {
   const [error, setError] = useState('');
   const [adminPassword, setAdminPassword] = useState('');
 
-  // SVG Icons
-  const SoccerBall = () => (
-    <svg width="24" height="24" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <circle cx="50" cy="50" r="48" fill="#000" stroke="#fff" strokeWidth="2"/>
-      <circle cx="50" cy="50" r="45" fill="#fff"/>
-      <circle cx="50" cy="50" r="42" fill="none" stroke="#000" strokeWidth="1.5"/>
-      <polygon points="50,50 55,40 60,50" fill="#000"/>
-      <polygon points="50,50 40,45 45,55" fill="#000"/>
-      <polygon points="50,50 60,50 55,60" fill="#000"/>
-      <polygon points="50,50 45,55 40,50" fill="#000"/>
-    </svg>
-  );
 
-  const Trophy = () => (
-    <svg width="28" height="28" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <path d="M30 20H70V40C70 50 60 60 50 60C40 60 30 50 30 40V20Z" fill="#FFD700" stroke="#DAA520" strokeWidth="2"/>
-      <rect x="45" y="60" width="10" height="20" fill="#DAA520"/>
-      <rect x="35" y="80" width="30" height="5" fill="#DAA520"/>
-      <circle cx="35" cy="25" r="4" fill="#DAA520"/>
-      <circle cx="65" cy="25" r="4" fill="#DAA520"/>
-    </svg>
-  );
-
-  const Medal = ({ color }) => {
-    const colors = {
-      gold: '#FFD700',
-      silver: '#C0C0C0',
-      bronze: '#CD7F32',
-    };
-    return (
-      <svg width="20" height="20" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <circle cx="50" cy="50" r="40" fill={colors[color]} stroke="#333" strokeWidth="2"/>
-        <circle cx="50" cy="50" r="32" fill={colors[color]}/>
-        <text x="50" y="58" textAnchor="middle" fontSize="24" fontWeight="bold" fill="#333">★</text>
-      </svg>
-    );
-  };
-
-  const Star = () => (
-    <svg width="20" height="20" viewBox="0 0 100 100" fill="#0070f3" xmlns="http://www.w3.org/2000/svg">
-      <polygon points="50,10 61,40 92,40 67,60 78,90 50,70 22,90 33,60 8,40 39,40" fill="#0070f3"/>
-    </svg>
-  );
 
   // Initialize app
   useEffect(() => {
@@ -442,23 +400,18 @@ const FIFA2026PoolApp = () => {
           <div style={{ background: 'white', borderRadius: '12px', padding: '1.5rem', boxShadow: '0 2px 8px rgba(0,0,0,0.08)' }}>
             <h2 style={{ fontSize: '18px', fontWeight: '700', margin: '0 0 1rem', color: '#1e3a8a' }}>🏅 Tabla de Posiciones</h2>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-              {leaderboard.slice(0, 10).map((user, idx) => {
-                let medalColor = null;
-                if (idx === 0) medalColor = 'gold';
-                if (idx === 1) medalColor = 'silver';
-                if (idx === 2) medalColor = 'bronze';
-
-                return (
+              {leaderboard.slice(0, 10).map((user, idx) => (
                   <div key={user.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '12px', background: user.username === currentUser ? 'linear-gradient(135deg, #dbeafe, #bfdbfe)' : '#f8fafc', borderRadius: '8px', border: user.username === currentUser ? '2px solid #0070f3' : '1px solid #e2e8f0' }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '12px', flex: 1 }}>
                       <span style={{ fontSize: '16px', fontWeight: '700', minWidth: '24px', color: '#64748b' }}>#{idx + 1}</span>
-                      {medalColor && <Medal color={medalColor} />}
+                      {idx === 0 && <span style={{ fontSize: '18px' }}>🥇</span>}
+                      {idx === 1 && <span style={{ fontSize: '18px' }}>🥈</span>}
+                      {idx === 2 && <span style={{ fontSize: '18px' }}>🥉</span>}
                       <span style={{ fontSize: '14px', fontWeight: '600', color: '#1e3a8a' }}>{user.username}</span>
                     </div>
                     <span style={{ fontSize: '14px', fontWeight: '700', color: '#0070f3', background: 'white', padding: '4px 12px', borderRadius: '20px' }}>⭐ {user.totalPoints} pts</span>
                   </div>
-                );
-              })}
+                ))}
             </div>
           </div>
         </div>
