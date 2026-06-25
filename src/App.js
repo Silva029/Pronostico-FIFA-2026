@@ -751,7 +751,7 @@ const FIFA2026PoolApp = () => {
         </div>
 
         <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '0 1rem' }}>
-          {sortedMatches.map(stage => (
+          {sortedStages.map(stage => (
             <div key={stage} style={{ marginBottom: '2rem' }}>
               <h2 style={{ fontSize: '18px', fontWeight: '700', margin: '0 0 1rem', color: '#065f46', paddingBottom: '8px', borderBottom: '3px solid #10b981' }}>{stage}</h2>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
