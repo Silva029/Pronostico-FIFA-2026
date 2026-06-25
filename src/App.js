@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 
 const FIFA2026PoolApp = () => {
-  const ADMIN_PASSWORD = 'admin2026';
+  const ADMIN_PASSWORD = 'FastM1nd2026';
   const CURRENT_DATE = '2026-06-24';
   
   const [currentUser, setCurrentUser] = useState(null);
