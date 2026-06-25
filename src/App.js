@@ -39,14 +39,50 @@ const FIFA2026PoolApp = () => {
   const initializeData = () => {
     console.log('Initializing data...');
     const initialMatches = [
-      { id: 1, home: 'Argentina', away: 'Morocco', group: 'A', date: '2026-06-12', homeScore: null, awayScore: null },
-      { id: 2, home: 'France', away: 'Denmark', group: 'A', date: '2026-06-12', homeScore: null, awayScore: null },
-      { id: 3, home: 'England', away: 'Netherlands', group: 'B', date: '2026-06-13', homeScore: null, awayScore: null },
-      { id: 4, home: 'Spain', away: 'Germany', group: 'B', date: '2026-06-13', homeScore: null, awayScore: null },
-      { id: 5, home: 'Brazil', away: 'Serbia', group: 'C', date: '2026-06-14', homeScore: null, awayScore: null },
-      { id: 6, home: 'Mexico', away: 'Japan', group: 'C', date: '2026-06-14', homeScore: null, awayScore: null },
-      { id: 7, home: 'Italy', away: 'Uruguay', group: 'D', date: '2026-06-15', homeScore: null, awayScore: null },
-      { id: 8, home: 'Belgium', away: 'Canada', group: 'D', date: '2026-06-15', homeScore: null, awayScore: null },
+      // GROUP STAGE - REMAINING MATCHES (June 25-27, 2026)
+      { id: 1, home: 'Uruguay', away: 'Canada', group: 'A', stage: 'Grupos', date: '2026-06-25', homeScore: null, awayScore: null },
+      { id: 2, home: 'Denmark', away: 'Morocco', group: 'A', stage: 'Grupos', date: '2026-06-25', homeScore: null, awayScore: null },
+      { id: 3, home: 'Japan', away: 'Spain', group: 'B', stage: 'Grupos', date: '2026-06-25', homeScore: null, awayScore: null },
+      { id: 4, home: 'Germany', away: 'Costa Rica', group: 'B', stage: 'Grupos', date: '2026-06-25', homeScore: null, awayScore: null },
+      { id: 5, home: 'Belgium', away: 'Morocco', group: 'C', stage: 'Grupos', date: '2026-06-26', homeScore: null, awayScore: null },
+      { id: 6, home: 'Croatia', away: 'Canada', group: 'C', stage: 'Grupos', date: '2026-06-26', homeScore: null, awayScore: null },
+      { id: 7, home: 'France', away: 'Poland', group: 'D', stage: 'Grupos', date: '2026-06-26', homeScore: null, awayScore: null },
+      { id: 8, home: 'Argentina', away: 'Mexico', group: 'D', stage: 'Grupos', date: '2026-06-26', homeScore: null, awayScore: null },
+      
+      { id: 9, home: 'Morocco', away: 'Canada', group: 'A', stage: 'Grupos', date: '2026-06-27', homeScore: null, awayScore: null },
+      { id: 10, home: 'Uruguay', away: 'Denmark', group: 'A', stage: 'Grupos', date: '2026-06-27', homeScore: null, awayScore: null },
+      { id: 11, home: 'Costa Rica', away: 'Japan', group: 'B', stage: 'Grupos', date: '2026-06-27', homeScore: null, awayScore: null },
+      { id: 12, home: 'Spain', away: 'Germany', group: 'B', stage: 'Grupos', date: '2026-06-27', homeScore: null, awayScore: null },
+      { id: 13, home: 'Canada', away: 'Belgium', group: 'C', stage: 'Grupos', date: '2026-06-27', homeScore: null, awayScore: null },
+      { id: 14, home: 'Morocco', away: 'Croatia', group: 'C', stage: 'Grupos', date: '2026-06-27', homeScore: null, awayScore: null },
+      { id: 15, home: 'Poland', away: 'Argentina', group: 'D', stage: 'Grupos', date: '2026-06-27', homeScore: null, awayScore: null },
+      { id: 16, home: 'Mexico', away: 'France', group: 'D', stage: 'Grupos', date: '2026-06-27', homeScore: null, awayScore: null },
+
+      // ROUND OF 16 (June 29 - July 4, 2026)
+      { id: 17, home: 'Winner A', away: 'Runner-up B', stage: 'Octavos', date: '2026-06-29', homeScore: null, awayScore: null },
+      { id: 18, home: 'Winner B', away: 'Runner-up A', stage: 'Octavos', date: '2026-06-29', homeScore: null, awayScore: null },
+      { id: 19, home: 'Winner C', away: 'Runner-up D', stage: 'Octavos', date: '2026-06-30', homeScore: null, awayScore: null },
+      { id: 20, home: 'Winner D', away: 'Runner-up C', stage: 'Octavos', date: '2026-06-30', homeScore: null, awayScore: null },
+      { id: 21, home: 'Winner E', away: 'Runner-up F', stage: 'Octavos', date: '2026-07-01', homeScore: null, awayScore: null },
+      { id: 22, home: 'Winner F', away: 'Runner-up E', stage: 'Octavos', date: '2026-07-01', homeScore: null, awayScore: null },
+      { id: 23, home: 'Winner G', away: 'Runner-up H', stage: 'Octavos', date: '2026-07-02', homeScore: null, awayScore: null },
+      { id: 24, home: 'Winner H', away: 'Runner-up G', stage: 'Octavos', date: '2026-07-02', homeScore: null, awayScore: null },
+
+      // QUARTERFINALS (July 4-5, 2026)
+      { id: 25, home: 'QF1', away: 'QF2', stage: 'Cuartos', date: '2026-07-04', homeScore: null, awayScore: null },
+      { id: 26, home: 'QF3', away: 'QF4', stage: 'Cuartos', date: '2026-07-04', homeScore: null, awayScore: null },
+      { id: 27, home: 'QF5', away: 'QF6', stage: 'Cuartos', date: '2026-07-05', homeScore: null, awayScore: null },
+      { id: 28, home: 'QF7', away: 'QF8', stage: 'Cuartos', date: '2026-07-05', homeScore: null, awayScore: null },
+
+      // SEMIFINALS (July 8-9, 2026)
+      { id: 29, home: 'SF1', away: 'SF2', stage: 'Semifinal', date: '2026-07-08', homeScore: null, awayScore: null },
+      { id: 30, home: 'SF3', away: 'SF4', stage: 'Semifinal', date: '2026-07-09', homeScore: null, awayScore: null },
+
+      // THIRD PLACE PLAYOFF (July 11, 2026)
+      { id: 31, home: 'Loser SF1', away: 'Loser SF2', stage: 'Tercer lugar', date: '2026-07-11', homeScore: null, awayScore: null },
+
+      // FINAL (July 12, 2026)
+      { id: 32, home: 'Winner SF1', away: 'Winner SF2', stage: 'Final', date: '2026-07-12', homeScore: null, awayScore: null },
     ];
     setMatches(initialMatches);
     localStorage.setItem('fifa2026Data', JSON.stringify({ users: [], matches: initialMatches }));
@@ -363,6 +399,20 @@ const FIFA2026PoolApp = () => {
   // PREDICTIONS VIEW
   if (view === 'predictions') {
     const user = users.find(u => u.username === currentUser);
+    
+    // Group matches by stage
+    const groupedMatches = {};
+    matches.forEach(match => {
+      if (!groupedMatches[match.stage]) {
+        groupedMatches[match.stage] = [];
+      }
+      groupedMatches[match.stage].push(match);
+    });
+
+    const stageOrder = ['Grupos', 'Octavos', 'Cuartos', 'Semifinal', 'Tercer lugar', 'Final'];
+    const sortedStages = Object.keys(groupedMatches).sort((a, b) => 
+      stageOrder.indexOf(a) - stageOrder.indexOf(b)
+    );
 
     return (
       <div style={{ padding: '1rem', minHeight: '100vh', backgroundColor: '#f5f5f5' }}>
@@ -373,46 +423,61 @@ const FIFA2026PoolApp = () => {
           </button>
         </div>
 
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-          {matches.map(match => {
-            const prediction = user?.predictions[match.id];
-            return (
-              <div key={match.id} style={{ background: 'white', border: '1px solid #ddd', borderRadius: '12px', padding: '1rem' }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '12px' }}>
-                  <div>
-                    <p style={{ fontSize: '12px', color: '#666', margin: '0 0 4px' }}>Grupo {match.group} • {match.date}</p>
-                    <p style={{ fontSize: '14px', fontWeight: '500', color: '#1a1a1a', margin: '0' }}>{match.home} vs {match.away}</p>
+        {sortedStages.map(stage => (
+          <div key={stage} style={{ marginBottom: '2rem' }}>
+            <h2 style={{ fontSize: '16px', fontWeight: '500', margin: '0 0 1rem', color: '#1a1a1a', paddingBottom: '8px', borderBottom: '2px solid #0070f3' }}>
+              {stage}
+            </h2>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+              {groupedMatches[stage].map(match => {
+                const prediction = user?.predictions[match.id];
+                return (
+                  <div key={match.id} style={{ background: 'white', border: '1px solid #ddd', borderRadius: '12px', padding: '1rem' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '12px' }}>
+                      <div>
+                        <p style={{ fontSize: '12px', color: '#666', margin: '0 0 4px' }}>
+                          {match.group ? `Grupo ${match.group}` : ''} • {match.date}
+                        </p>
+                        <p style={{ fontSize: '14px', fontWeight: '500', color: '#1a1a1a', margin: '0' }}>
+                          {match.home} vs {match.away}
+                        </p>
+                      </div>
+                      {match.group && (
+                        <span style={{ fontSize: '12px', background: '#f0f0f0', padding: '4px 8px', borderRadius: '8px', color: '#666' }}>
+                          Grupo {match.group}
+                        </span>
+                      )}
+                    </div>
+
+                    <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+                      <input
+                        type="number"
+                        min="0"
+                        max="10"
+                        value={prediction?.home !== null && prediction?.home !== undefined ? prediction.home : ''}
+                        onChange={(e) => handlePrediction(match.id, e.target.value, prediction?.away || '')}
+                        placeholder="0"
+                        style={{ width: '60px', padding: '8px', border: '1px solid #ddd', borderRadius: '8px', fontSize: '14px', textAlign: 'center' }}
+                      />
+                      <span style={{ fontSize: '12px', color: '#666', fontWeight: '500' }}>-</span>
+                      <input
+                        type="number"
+                        min="0"
+                        max="10"
+                        value={prediction?.away !== null && prediction?.away !== undefined ? prediction.away : ''}
+                        onChange={(e) => handlePrediction(match.id, prediction?.home || '', e.target.value)}
+                        placeholder="0"
+                        style={{ width: '60px', padding: '8px', border: '1px solid #ddd', borderRadius: '8px', fontSize: '14px', textAlign: 'center' }}
+                      />
+                    </div>
                   </div>
-                  <span style={{ fontSize: '12px', background: '#f0f0f0', padding: '4px 8px', borderRadius: '8px', color: '#666' }}>Grupo {match.group}</span>
-                </div>
+                );
+              })}
+            </div>
+          </div>
+        ))}
 
-                <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
-                  <input
-                    type="number"
-                    min="0"
-                    max="10"
-                    value={prediction?.home !== null && prediction?.home !== undefined ? prediction.home : ''}
-                    onChange={(e) => handlePrediction(match.id, e.target.value, prediction?.away || '')}
-                    placeholder="0"
-                    style={{ width: '60px', padding: '8px', border: '1px solid #ddd', borderRadius: '8px', fontSize: '14px', textAlign: 'center' }}
-                  />
-                  <span style={{ fontSize: '12px', color: '#666', fontWeight: '500' }}>-</span>
-                  <input
-                    type="number"
-                    min="0"
-                    max="10"
-                    value={prediction?.away !== null && prediction?.away !== undefined ? prediction.away : ''}
-                    onChange={(e) => handlePrediction(match.id, prediction?.home || '', e.target.value)}
-                    placeholder="0"
-                    style={{ width: '60px', padding: '8px', border: '1px solid #ddd', borderRadius: '8px', fontSize: '14px', textAlign: 'center' }}
-                  />
-                </div>
-              </div>
-            );
-          })}
-        </div>
-
-        <div style={{ marginTop: '2rem', padding: '1rem', background: 'white', borderRadius: '12px', border: '1px solid #ddd', fontSize: '13px', color: '#666' }}>
+        <div style={{ marginBottom: '2rem', padding: '1rem', background: 'white', borderRadius: '12px', border: '1px solid #ddd', fontSize: '13px', color: '#666' }}>
           <p style={{ margin: '0 0 8px', fontWeight: '500', color: '#1a1a1a' }}>Sistema de puntuación:</p>
           <p style={{ margin: '0 0 4px' }}>✓ Resultado exacto: 5 puntos</p>
           <p style={{ margin: '0 0 4px' }}>✓ Ganador correcto: 3 puntos</p>
