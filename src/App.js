@@ -328,8 +328,8 @@ const FIFA2026PoolApp = () => {
             </form>
           )}
         </div>
+        <Footer />
       </div>
-      <Footer />
     </div>
     );
   }
@@ -353,8 +353,8 @@ const FIFA2026PoolApp = () => {
 
           <button onClick={() => setView('login')} style={{ width: '100%', marginTop: '1rem', padding: '12px', background: 'transparent', color: '#0070f3', border: '2px solid #0070f3', borderRadius: '8px', cursor: 'pointer', fontSize: '14px', fontWeight: '600' }}>← Volver</button>
         </div>
+        <Footer />
       </div>
-      <Footer />
     </div>
     );
   }
@@ -424,8 +424,8 @@ const FIFA2026PoolApp = () => {
             </div>
           </div>
         </div>
+        <Footer />
       </div>
-      <Footer />
     </div>
     );
   }
@@ -496,8 +496,8 @@ const FIFA2026PoolApp = () => {
             </div>
           </div>
         </div>
+        <Footer />
       </div>
-      <Footer />
     </div>
     );
   }
@@ -550,8 +550,8 @@ const FIFA2026PoolApp = () => {
             })}
           </div>
         </div>
+        <Footer />
       </div>
-      <Footer />
     </div>
     );
   }
@@ -623,8 +623,8 @@ const FIFA2026PoolApp = () => {
             </div>
           ))}
         </div>
+        <Footer />
       </div>
-      <Footer />
     </div>
     );
   }
@@ -694,8 +694,8 @@ const FIFA2026PoolApp = () => {
             </div>
           </div>
         </div>
+        <Footer />
       </div>
-      <Footer />
     </div>
     );
   }
@@ -760,8 +760,8 @@ const FIFA2026PoolApp = () => {
             </div>
           ))}
         </div>
+        <Footer />
       </div>
-      <Footer />
     </div>
     );
   }
