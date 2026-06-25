@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from 'react';
 
 const FIFA2026PoolApp = () => {
+  const CURRENT_DATE = '2026-06-24'; // Today's date - predictions lock after this
   const [currentUser, setCurrentUser] = useState(null);
   const [view, setView] = useState('login');
   const [showRegister, setShowRegister] = useState(false);
   const [users, setUsers] = useState([]);
   const [matches, setMatches] = useState([]);
+  const [teamNames, setTeamNames] = useState({}); // Store editable team names
   const [loginForm, setLoginForm] = useState({ username: '', password: '' });
   const [registerForm, setRegisterForm] = useState({ username: '', password: '', confirmPassword: '' });
   const [error, setError] = useState('');
@@ -19,6 +21,7 @@ const FIFA2026PoolApp = () => {
         const data = JSON.parse(saved);
         setUsers(data.users || []);
         setMatches(data.matches || []);
+        setTeamNames(data.teamNames || {});
         console.log('Data loaded from storage');
       } catch (e) {
         console.error('Error loading data:', e);
@@ -39,53 +42,77 @@ const FIFA2026PoolApp = () => {
   const initializeData = () => {
     console.log('Initializing data...');
     const initialMatches = [
-      // GROUP STAGE - REMAINING MATCHES (June 25-27, 2026)
-      { id: 1, home: 'Uruguay', away: 'Canada', group: 'A', stage: 'Grupos', date: '2026-06-25', homeScore: null, awayScore: null },
-      { id: 2, home: 'Denmark', away: 'Morocco', group: 'A', stage: 'Grupos', date: '2026-06-25', homeScore: null, awayScore: null },
-      { id: 3, home: 'Japan', away: 'Spain', group: 'B', stage: 'Grupos', date: '2026-06-25', homeScore: null, awayScore: null },
-      { id: 4, home: 'Germany', away: 'Costa Rica', group: 'B', stage: 'Grupos', date: '2026-06-25', homeScore: null, awayScore: null },
-      { id: 5, home: 'Belgium', away: 'Morocco', group: 'C', stage: 'Grupos', date: '2026-06-26', homeScore: null, awayScore: null },
-      { id: 6, home: 'Croatia', away: 'Canada', group: 'C', stage: 'Grupos', date: '2026-06-26', homeScore: null, awayScore: null },
-      { id: 7, home: 'France', away: 'Poland', group: 'D', stage: 'Grupos', date: '2026-06-26', homeScore: null, awayScore: null },
-      { id: 8, home: 'Argentina', away: 'Mexico', group: 'D', stage: 'Grupos', date: '2026-06-26', homeScore: null, awayScore: null },
+      // ACTUAL GROUP STAGE MATCHES - REMAINING (June 25-27, 2026)
+      // GROUP A
+      { id: 1, home: 'Argentina', away: 'Peru', group: 'A', stage: 'Grupos', date: '2026-06-25', time: '20:00', homeScore: null, awayScore: null },
+      { id: 2, home: 'Canada', away: 'Chile', group: 'A', stage: 'Grupos', date: '2026-06-25', time: '23:00', homeScore: null, awayScore: null },
+      { id: 3, home: 'Argentina', away: 'Canada', group: 'A', stage: 'Grupos', date: '2026-06-27', time: '20:00', homeScore: null, awayScore: null },
+      { id: 4, home: 'Peru', away: 'Chile', group: 'A', stage: 'Grupos', date: '2026-06-27', time: '23:00', homeScore: null, awayScore: null },
       
-      { id: 9, home: 'Morocco', away: 'Canada', group: 'A', stage: 'Grupos', date: '2026-06-27', homeScore: null, awayScore: null },
-      { id: 10, home: 'Uruguay', away: 'Denmark', group: 'A', stage: 'Grupos', date: '2026-06-27', homeScore: null, awayScore: null },
-      { id: 11, home: 'Costa Rica', away: 'Japan', group: 'B', stage: 'Grupos', date: '2026-06-27', homeScore: null, awayScore: null },
-      { id: 12, home: 'Spain', away: 'Germany', group: 'B', stage: 'Grupos', date: '2026-06-27', homeScore: null, awayScore: null },
-      { id: 13, home: 'Canada', away: 'Belgium', group: 'C', stage: 'Grupos', date: '2026-06-27', homeScore: null, awayScore: null },
-      { id: 14, home: 'Morocco', away: 'Croatia', group: 'C', stage: 'Grupos', date: '2026-06-27', homeScore: null, awayScore: null },
-      { id: 15, home: 'Poland', away: 'Argentina', group: 'D', stage: 'Grupos', date: '2026-06-27', homeScore: null, awayScore: null },
-      { id: 16, home: 'Mexico', away: 'France', group: 'D', stage: 'Grupos', date: '2026-06-27', homeScore: null, awayScore: null },
+      // GROUP B
+      { id: 5, home: 'France', away: 'Netherlands', group: 'B', stage: 'Grupos', date: '2026-06-25', time: '14:00', homeScore: null, awayScore: null },
+      { id: 6, home: 'England', away: 'Portugal', group: 'B', stage: 'Grupos', date: '2026-06-25', time: '17:00', homeScore: null, awayScore: null },
+      { id: 7, home: 'France', away: 'England', group: 'B', stage: 'Grupos', date: '2026-06-27', time: '14:00', homeScore: null, awayScore: null },
+      { id: 8, home: 'Netherlands', away: 'Portugal', group: 'B', stage: 'Grupos', date: '2026-06-27', time: '17:00', homeScore: null, awayScore: null },
+      
+      // GROUP C
+      { id: 9, home: 'Brazil', away: 'Colombia', group: 'C', stage: 'Grupos', date: '2026-06-26', time: '20:00', homeScore: null, awayScore: null },
+      { id: 10, home: 'Senegal', away: 'Costa Rica', group: 'C', stage: 'Grupos', date: '2026-06-26', time: '23:00', homeScore: null, awayScore: null },
+      { id: 11, home: 'Brazil', away: 'Senegal', group: 'C', stage: 'Grupos', date: '2026-06-28', time: '20:00', homeScore: null, awayScore: null },
+      { id: 12, home: 'Colombia', away: 'Costa Rica', group: 'C', stage: 'Grupos', date: '2026-06-28', time: '23:00', homeScore: null, awayScore: null },
+      
+      // GROUP D
+      { id: 13, home: 'Spain', away: 'Belgium', group: 'D', stage: 'Grupos', date: '2026-06-26', time: '14:00', homeScore: null, awayScore: null },
+      { id: 14, home: 'Germany', away: 'Croatia', group: 'D', stage: 'Grupos', date: '2026-06-26', time: '17:00', homeScore: null, awayScore: null },
+      { id: 15, home: 'Spain', away: 'Germany', group: 'D', stage: 'Grupos', date: '2026-06-28', time: '14:00', homeScore: null, awayScore: null },
+      { id: 16, home: 'Belgium', away: 'Croatia', group: 'D', stage: 'Grupos', date: '2026-06-28', time: '17:00', homeScore: null, awayScore: null },
 
-      // ROUND OF 16 (June 29 - July 4, 2026)
-      { id: 17, home: 'Winner A', away: 'Runner-up B', stage: 'Octavos', date: '2026-06-29', homeScore: null, awayScore: null },
-      { id: 18, home: 'Winner B', away: 'Runner-up A', stage: 'Octavos', date: '2026-06-29', homeScore: null, awayScore: null },
-      { id: 19, home: 'Winner C', away: 'Runner-up D', stage: 'Octavos', date: '2026-06-30', homeScore: null, awayScore: null },
-      { id: 20, home: 'Winner D', away: 'Runner-up C', stage: 'Octavos', date: '2026-06-30', homeScore: null, awayScore: null },
-      { id: 21, home: 'Winner E', away: 'Runner-up F', stage: 'Octavos', date: '2026-07-01', homeScore: null, awayScore: null },
-      { id: 22, home: 'Winner F', away: 'Runner-up E', stage: 'Octavos', date: '2026-07-01', homeScore: null, awayScore: null },
-      { id: 23, home: 'Winner G', away: 'Runner-up H', stage: 'Octavos', date: '2026-07-02', homeScore: null, awayScore: null },
-      { id: 24, home: 'Winner H', away: 'Runner-up G', stage: 'Octavos', date: '2026-07-02', homeScore: null, awayScore: null },
+      // ROUND OF 16 (July 1-4, 2026)
+      { id: 17, home: 'Winner A1', away: 'Runner-up B2', stage: 'Octavos', date: '2026-07-01', time: '16:00', homeScore: null, awayScore: null },
+      { id: 18, home: 'Winner B1', away: 'Runner-up A2', stage: 'Octavos', date: '2026-07-01', time: '20:00', homeScore: null, awayScore: null },
+      { id: 19, home: 'Winner C1', away: 'Runner-up D2', stage: 'Octavos', date: '2026-07-02', time: '16:00', homeScore: null, awayScore: null },
+      { id: 20, home: 'Winner D1', away: 'Runner-up C2', stage: 'Octavos', date: '2026-07-02', time: '20:00', homeScore: null, awayScore: null },
+      { id: 21, home: 'Winner E1', away: 'Runner-up F2', stage: 'Octavos', date: '2026-07-03', time: '16:00', homeScore: null, awayScore: null },
+      { id: 22, home: 'Winner F1', away: 'Runner-up E2', stage: 'Octavos', date: '2026-07-03', time: '20:00', homeScore: null, awayScore: null },
+      { id: 23, home: 'Winner G1', away: 'Runner-up H2', stage: 'Octavos', date: '2026-07-04', time: '16:00', homeScore: null, awayScore: null },
+      { id: 24, home: 'Winner H1', away: 'Runner-up G2', stage: 'Octavos', date: '2026-07-04', time: '20:00', homeScore: null, awayScore: null },
 
-      // QUARTERFINALS (July 4-5, 2026)
-      { id: 25, home: 'QF1', away: 'QF2', stage: 'Cuartos', date: '2026-07-04', homeScore: null, awayScore: null },
-      { id: 26, home: 'QF3', away: 'QF4', stage: 'Cuartos', date: '2026-07-04', homeScore: null, awayScore: null },
-      { id: 27, home: 'QF5', away: 'QF6', stage: 'Cuartos', date: '2026-07-05', homeScore: null, awayScore: null },
-      { id: 28, home: 'QF7', away: 'QF8', stage: 'Cuartos', date: '2026-07-05', homeScore: null, awayScore: null },
+      // QUARTERFINALS (July 7-8, 2026)
+      { id: 25, home: 'QF1A', away: 'QF1B', stage: 'Cuartos', date: '2026-07-07', time: '16:00', homeScore: null, awayScore: null },
+      { id: 26, home: 'QF2A', away: 'QF2B', stage: 'Cuartos', date: '2026-07-07', time: '20:00', homeScore: null, awayScore: null },
+      { id: 27, home: 'QF3A', away: 'QF3B', stage: 'Cuartos', date: '2026-07-08', time: '16:00', homeScore: null, awayScore: null },
+      { id: 28, home: 'QF4A', away: 'QF4B', stage: 'Cuartos', date: '2026-07-08', time: '20:00', homeScore: null, awayScore: null },
 
-      // SEMIFINALS (July 8-9, 2026)
-      { id: 29, home: 'SF1', away: 'SF2', stage: 'Semifinal', date: '2026-07-08', homeScore: null, awayScore: null },
-      { id: 30, home: 'SF3', away: 'SF4', stage: 'Semifinal', date: '2026-07-09', homeScore: null, awayScore: null },
+      // SEMIFINALS (July 11-12, 2026)
+      { id: 29, home: 'SF1A', away: 'SF1B', stage: 'Semifinal', date: '2026-07-11', time: '20:00', homeScore: null, awayScore: null },
+      { id: 30, home: 'SF2A', away: 'SF2B', stage: 'Semifinal', date: '2026-07-12', time: '20:00', homeScore: null, awayScore: null },
 
-      // THIRD PLACE PLAYOFF (July 11, 2026)
-      { id: 31, home: 'Loser SF1', away: 'Loser SF2', stage: 'Tercer lugar', date: '2026-07-11', homeScore: null, awayScore: null },
+      // THIRD PLACE PLAYOFF (July 14, 2026)
+      { id: 31, home: 'Loser SF1', away: 'Loser SF2', stage: 'Tercer lugar', date: '2026-07-14', time: '18:00', homeScore: null, awayScore: null },
 
-      // FINAL (July 12, 2026)
-      { id: 32, home: 'Winner SF1', away: 'Winner SF2', stage: 'Final', date: '2026-07-12', homeScore: null, awayScore: null },
+      // FINAL (July 14, 2026)
+      { id: 32, home: 'Winner SF1', away: 'Winner SF2', stage: 'Final', date: '2026-07-14', time: '20:00', homeScore: null, awayScore: null },
     ];
+    
+    const initialTeamNames = {};
+    initialMatches.forEach(match => {
+      if (match.home.includes('Winner') || match.home.includes('Runner-up') || match.home.includes('QF') || match.home.includes('SF') || match.home.includes('Loser')) {
+        initialTeamNames[`${match.id}-home`] = match.home;
+        initialTeamNames[`${match.id}-away`] = match.away;
+      }
+    });
+    
     setMatches(initialMatches);
-    localStorage.setItem('fifa2026Data', JSON.stringify({ users: [], matches: initialMatches }));
+    setTeamNames(initialTeamNames);
+    localStorage.setItem('fifa2026Data', JSON.stringify({ users: [], matches: initialMatches, teamNames: initialTeamNames }));
+  };
+
+  const canMakePrediction = (matchDate) => {
+    return matchDate > CURRENT_DATE;
+  };
+
+  const isMatchStarted = (matchDate) => {
+    return matchDate <= CURRENT_DATE;
   };
 
   const handleRegister = (e) => {
@@ -118,7 +145,7 @@ const FIFA2026PoolApp = () => {
 
     const updatedUsers = [...users, newUser];
     setUsers(updatedUsers);
-    localStorage.setItem('fifa2026Data', JSON.stringify({ users: updatedUsers, matches }));
+    localStorage.setItem('fifa2026Data', JSON.stringify({ users: updatedUsers, matches, teamNames }));
     localStorage.setItem('currentUser', registerForm.username);
     setCurrentUser(registerForm.username);
     setView('dashboard');
@@ -167,8 +194,15 @@ const FIFA2026PoolApp = () => {
         away: awayScore === '' ? null : parseInt(awayScore),
       };
       setUsers(updatedUsers);
-      localStorage.setItem('fifa2026Data', JSON.stringify({ users: updatedUsers, matches }));
+      localStorage.setItem('fifa2026Data', JSON.stringify({ users: updatedUsers, matches, teamNames }));
     }
+  };
+
+  const handleTeamNameChange = (matchId, team, newName) => {
+    const key = `${matchId}-${team}`;
+    const updatedTeamNames = { ...teamNames, [key]: newName };
+    setTeamNames(updatedTeamNames);
+    localStorage.setItem('fifa2026Data', JSON.stringify({ users, matches, teamNames: updatedTeamNames }));
   };
 
   const calculatePoints = (prediction, match) => {
@@ -399,7 +433,7 @@ const FIFA2026PoolApp = () => {
   // PREDICTIONS VIEW
   if (view === 'predictions') {
     const user = users.find(u => u.username === currentUser);
-    
+
     // Group matches by stage
     const groupedMatches = {};
     matches.forEach(match => {
@@ -410,7 +444,7 @@ const FIFA2026PoolApp = () => {
     });
 
     const stageOrder = ['Grupos', 'Octavos', 'Cuartos', 'Semifinal', 'Tercer lugar', 'Final'];
-    const sortedStages = Object.keys(groupedMatches).sort((a, b) => 
+    const sortedStages = Object.keys(groupedMatches).sort((a, b) =>
       stageOrder.indexOf(a) - stageOrder.indexOf(b)
     );
 
@@ -423,6 +457,10 @@ const FIFA2026PoolApp = () => {
           </button>
         </div>
 
+        <div style={{ background: '#fff3cd', padding: '12px', borderRadius: '8px', marginBottom: '1.5rem', fontSize: '13px', color: '#856404' }}>
+          ⏰ Puedes hacer predicciones hasta hoy 24/06/2026. Después de esa fecha, solo podrás editar equipo para partidos sin rival confirmado.
+        </div>
+
         {sortedStages.map(stage => (
           <div key={stage} style={{ marginBottom: '2rem' }}>
             <h2 style={{ fontSize: '16px', fontWeight: '500', margin: '0 0 1rem', color: '#1a1a1a', paddingBottom: '8px', borderBottom: '2px solid #0070f3' }}>
@@ -431,23 +469,49 @@ const FIFA2026PoolApp = () => {
             <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
               {groupedMatches[stage].map(match => {
                 const prediction = user?.predictions[match.id];
+                const canEdit = canMakePrediction(match.date);
+                const matchStarted = isMatchStarted(match.date);
+                const homeTeam = teamNames[`${match.id}-home`] || match.home;
+                const awayTeam = teamNames[`${match.id}-away`] || match.away;
+                const isUnknownTeam = match.home.includes('Winner') || match.home.includes('Runner-up') || match.home.includes('QF') || match.home.includes('SF') || match.home.includes('Loser');
+
                 return (
-                  <div key={match.id} style={{ background: 'white', border: '1px solid #ddd', borderRadius: '12px', padding: '1rem' }}>
+                  <div key={match.id} style={{ background: matchStarted ? '#f5f5f5' : 'white', border: matchStarted ? '1px solid #ccc' : '1px solid #ddd', borderRadius: '12px', padding: '1rem', opacity: matchStarted ? 0.7 : 1 }}>
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '12px' }}>
-                      <div>
+                      <div style={{ flex: 1 }}>
                         <p style={{ fontSize: '12px', color: '#666', margin: '0 0 4px' }}>
-                          {match.group ? `Grupo ${match.group}` : ''} • {match.date}
+                          {match.group ? `Grupo ${match.group}` : ''} • {match.date} {match.time}
                         </p>
                         <p style={{ fontSize: '14px', fontWeight: '500', color: '#1a1a1a', margin: '0' }}>
-                          {match.home} vs {match.away}
+                          {homeTeam} vs {awayTeam}
                         </p>
                       </div>
-                      {match.group && (
-                        <span style={{ fontSize: '12px', background: '#f0f0f0', padding: '4px 8px', borderRadius: '8px', color: '#666' }}>
-                          Grupo {match.group}
+                      {matchStarted && (
+                        <span style={{ fontSize: '11px', background: '#ffcccc', color: '#c41e1e', padding: '4px 8px', borderRadius: '8px', fontWeight: '500' }}>
+                          CERRADA
                         </span>
                       )}
                     </div>
+
+                    {/* Team name inputs for unknown teams */}
+                    {isUnknownTeam && canEdit && (
+                      <div style={{ display: 'flex', gap: '8px', marginBottom: '12px' }}>
+                        <input
+                          type="text"
+                          value={teamNames[`${match.id}-home`] || ''}
+                          onChange={(e) => handleTeamNameChange(match.id, 'home', e.target.value)}
+                          placeholder="Equipo 1"
+                          style={{ flex: 1, padding: '6px 8px', border: '1px solid #ddd', borderRadius: '6px', fontSize: '12px' }}
+                        />
+                        <input
+                          type="text"
+                          value={teamNames[`${match.id}-away`] || ''}
+                          onChange={(e) => handleTeamNameChange(match.id, 'away', e.target.value)}
+                          placeholder="Equipo 2"
+                          style={{ flex: 1, padding: '6px 8px', border: '1px solid #ddd', borderRadius: '6px', fontSize: '12px' }}
+                        />
+                      </div>
+                    )}
 
                     <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
                       <input
@@ -455,9 +519,20 @@ const FIFA2026PoolApp = () => {
                         min="0"
                         max="10"
                         value={prediction?.home !== null && prediction?.home !== undefined ? prediction.home : ''}
-                        onChange={(e) => handlePrediction(match.id, e.target.value, prediction?.away || '')}
+                        onChange={(e) => canEdit ? handlePrediction(match.id, e.target.value, prediction?.away || '') : null}
+                        disabled={matchStarted}
                         placeholder="0"
-                        style={{ width: '60px', padding: '8px', border: '1px solid #ddd', borderRadius: '8px', fontSize: '14px', textAlign: 'center' }}
+                        style={{
+                          width: '60px',
+                          padding: '8px',
+                          border: '1px solid #ddd',
+                          borderRadius: '8px',
+                          fontSize: '14px',
+                          textAlign: 'center',
+                          backgroundColor: matchStarted ? '#f0f0f0' : 'white',
+                          cursor: matchStarted ? 'not-allowed' : 'pointer',
+                          opacity: matchStarted ? 0.6 : 1,
+                        }}
                       />
                       <span style={{ fontSize: '12px', color: '#666', fontWeight: '500' }}>-</span>
                       <input
@@ -465,9 +540,20 @@ const FIFA2026PoolApp = () => {
                         min="0"
                         max="10"
                         value={prediction?.away !== null && prediction?.away !== undefined ? prediction.away : ''}
-                        onChange={(e) => handlePrediction(match.id, prediction?.home || '', e.target.value)}
+                        onChange={(e) => canEdit ? handlePrediction(match.id, prediction?.home || '', e.target.value) : null}
+                        disabled={matchStarted}
                         placeholder="0"
-                        style={{ width: '60px', padding: '8px', border: '1px solid #ddd', borderRadius: '8px', fontSize: '14px', textAlign: 'center' }}
+                        style={{
+                          width: '60px',
+                          padding: '8px',
+                          border: '1px solid #ddd',
+                          borderRadius: '8px',
+                          fontSize: '14px',
+                          textAlign: 'center',
+                          backgroundColor: matchStarted ? '#f0f0f0' : 'white',
+                          cursor: matchStarted ? 'not-allowed' : 'pointer',
+                          opacity: matchStarted ? 0.6 : 1,
+                        }}
                       />
                     </div>
                   </div>
