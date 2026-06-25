@@ -1,8 +1,46 @@
 import React, { useState, useEffect } from 'react';
 
 const FIFA2026PoolApp = () => {
-  const ADMIN_PASSWORD = 'FastM1nd2026';
-  const CURRENT_DATE = '2026-06-24';
+  const ADMIN_PASSWORD = 'admin2026';
+  const TIMEZONE = 'America/Denver'; // Mountain Time
+  
+  // Helper function to check if prediction window is closed for a match
+  const canMakePrediction = (matchDate, matchTime) => {
+    try {
+      // Create match datetime string
+      const matchDateTime = `${matchDate}T${matchTime}:00`;
+      
+      // Get current time in Mountain Time
+      const now = new Date();
+      const formatter = new Intl.DateTimeFormat('en-US', {
+        timeZone: TIMEZONE,
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit',
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit',
+        hour12: false
+      });
+      
+      const mountainTimeString = formatter.format(now);
+      const [datePart, timePart] = mountainTimeString.split(', ');
+      const [month, day, year] = datePart.split('/');
+      const currentDate = `${year}-${month}-${day}`;
+      const [hours, minutes, seconds] = timePart.split(':');
+      
+      // Create date objects for comparison (all in Mountain Time)
+      const matchDateObj = new Date(`${matchDate}T${matchTime}:00`);
+      const oneHourBefore = new Date(matchDateObj.getTime() - (60 * 60 * 1000)); // 1 hour before
+      const currentDateObj = new Date();
+      
+      // Compare: current time must be before (match time - 1 hour)
+      return currentDateObj < oneHourBefore;
+    } catch (e) {
+      console.error('Error checking prediction window:', e);
+      return false;
+    }
+  };
   
   const [currentUser, setCurrentUser] = useState(null);
   const [isAdmin, setIsAdmin] = useState(false);
@@ -285,10 +323,6 @@ const FIFA2026PoolApp = () => {
 
   const getNextMatches = () => {
     return matches.filter(m => m.homeScore === null).sort((a, b) => new Date(a.date) - new Date(b.date)).slice(0, 10);
-  };
-
-  const canMakePrediction = (matchDate) => {
-    return matchDate > CURRENT_DATE;
   };
 
   // LOGIN VIEW
@@ -589,7 +623,7 @@ const FIFA2026PoolApp = () => {
               <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
                 {groupedMatches[stage].map(match => {
                   const prediction = user?.predictions[match.id];
-                  const canEdit = canMakePrediction(match.date);
+                  const canEdit = canMakePrediction(match.date, match.time);
                   const homeTeam = teamNames[`${match.id}-home`] || match.home;
                   const awayTeam = teamNames[`${match.id}-away`] || match.away;
 
