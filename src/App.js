@@ -1,15 +1,53 @@
 import React, { useState, useEffect } from 'react';
 
 const FIFA2026PoolApp = () => {
-  const ADMIN_PASSWORD = 'admin2026';
+  const TIMEZONE = 'America/Denver'; // Mountain Time
   
-  // Check if user can make prediction - blocks 1 hour before match (Mountain Time)
+  // Get current time in Mountain Time
+  const getCurrentTimeInMT = () => {
+    const now = new Date();
+    const formatter = new Intl.DateTimeFormat('en-US', {
+      timeZone: TIMEZONE,
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+      hour: '2-digit',
+      minute: '2-digit',
+      second: '2-digit',
+      hour12: false
+    });
+    
+    const parts = formatter.formatToParts(now);
+    const values = {};
+    parts.forEach(part => {
+      values[part.type] = part.value;
+    });
+    
+    return {
+      date: `${values.year}-${values.month}-${values.day}`,
+      time: `${values.hour}:${values.minute}:${values.second}`,
+      fullDate: new Date(`${values.year}-${values.month}-${values.day}T${values.hour}:${values.minute}:${values.second}`),
+      display: `${values.hour}:${values.minute}`
+    };
+  };
+  
+  // Check if prediction is still open (1 hour BEFORE match starts)
   const canMakePrediction = (matchDate, matchTime) => {
     try {
-      const now = new Date();
-      const matchDateTime = new Date(`${matchDate}T${matchTime}:00`);
-      const lockTime = new Date(matchDateTime.getTime() - 60 * 60 * 1000);
-      return now < lockTime;
+      const currentMT = getCurrentTimeInMT();
+      
+      // Parse match date and time
+      const [matchYear, matchMonth, matchDay] = matchDate.split('-');
+      const [matchHour, matchMinute] = matchTime.split(':');
+      
+      // Create match datetime in Mountain Time
+      const matchDateTime = new Date(`${matchYear}-${matchMonth}-${matchDay}T${matchHour}:${matchMinute}:00`);
+      
+      // Lock time is 1 hour BEFORE match
+      const lockTime = new Date(matchDateTime.getTime() - (60 * 60 * 1000));
+      
+      // Current time must be BEFORE lock time to allow edits
+      return currentMT.fullDate < lockTime;
     } catch (e) {
       console.error('Error checking prediction:', e);
       return false;
@@ -27,6 +65,7 @@ const FIFA2026PoolApp = () => {
   const [registerForm, setRegisterForm] = useState({ username: '', password: '', confirmPassword: '' });
   const [error, setError] = useState('');
   const [adminPassword, setAdminPassword] = useState('');
+  const [currentMTTime, setCurrentMTTime] = useState(getCurrentTimeInMT());
 
   // Footer Component
   const Footer = () => (
@@ -35,7 +74,7 @@ const FIFA2026PoolApp = () => {
     </div>
   );
 
-  // Initialize app
+  // Initialize app and update time every second
   useEffect(() => {
     const saved = localStorage.getItem('fifa2026Data');
     if (saved) {
@@ -59,6 +98,13 @@ const FIFA2026PoolApp = () => {
       setIsAdmin(adminStatus === 'true');
       setView(adminStatus === 'true' ? 'adminDashboard' : 'dashboard');
     }
+
+    // Update time every second
+    const timer = setInterval(() => {
+      setCurrentMTTime(getCurrentTimeInMT());
+    }, 1000);
+
+    return () => clearInterval(timer);
   }, []);
 
   const initializeData = () => {
@@ -353,6 +399,7 @@ const FIFA2026PoolApp = () => {
             <div>
               <h1 style={{ fontSize: '28px', fontWeight: '700', margin: '0 0 4px' }}>⚽ Pronóstico 2026</h1>
               <p style={{ fontSize: '14px', margin: '0', opacity: '0.9' }}>Bienvenido, {currentUser}!</p>
+              <p style={{ fontSize: '12px', margin: '4px 0 0', opacity: '0.8' }}>🕐 Hora Mountain Time: {currentMTTime.display}</p>
             </div>
             <button onClick={handleLogout} style={{ padding: '8px 16px', background: 'rgba(255,255,255,0.2)', color: 'white', border: '1px solid rgba(255,255,255,0.4)', borderRadius: '8px', cursor: 'pointer', fontSize: '13px', fontWeight: '600' }}>Salir</button>
           </div>
@@ -490,7 +537,10 @@ const FIFA2026PoolApp = () => {
               const prediction = user?.predictions[match.id];
               return (
                 <div key={match.id} style={{ background: 'white', padding: '1.5rem', borderRadius: '12px', boxShadow: '0 2px 8px rgba(0,0,0,0.08)', borderLeft: '4px solid #0070f3' }}>
-                  <p style={{ fontSize: '12px', color: '#64748b', margin: '0 0 8px', fontWeight: '600' }}>📍 {match.date} • {match.time}</p>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
+                    <p style={{ fontSize: '12px', color: '#64748b', margin: '0', fontWeight: '600' }}>📍 {match.date} • {match.time} MT</p>
+                    {!canMakePrediction(match.date, match.time) && <span style={{ fontSize: '11px', background: '#fee2e2', color: '#991b1b', padding: '4px 8px', borderRadius: '4px', fontWeight: '600' }}>🔒 BLOQUEADA</span>}
+                  </div>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '16px', marginBottom: '12px' }}>
                     <div style={{ textAlign: 'center', flex: 1 }}>
                       <p style={{ fontSize: '16px', fontWeight: '700', color: '#1e3a8a', margin: '0' }}>{homeTeam}</p>
@@ -558,8 +608,13 @@ const FIFA2026PoolApp = () => {
                   const homeTeam = teamNames[`${match.id}-home`] || match.home;
                   const awayTeam = teamNames[`${match.id}-away`] || match.away;
                   return (
-                    <div key={match.id} style={{ background: 'white', padding: '1.5rem', borderRadius: '12px', boxShadow: '0 2px 8px rgba(0,0,0,0.08)', borderLeft: '4px solid ' + (canEdit ? '#0070f3' : '#cbd5e1') }}>
-                      <p style={{ fontSize: '12px', color: '#64748b', margin: '0 0 8px', fontWeight: '600' }}>📍 {match.date} • {match.time}</p>
+                    <div key={match.id} style={{ background: 'white', padding: '1.5rem', borderRadius: '12px', boxShadow: '0 2px 8px rgba(0,0,0,0.08)', borderLeft: '4px solid ' + (canEdit ? '#0070f3' : '#ef4444') }}>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
+                        <p style={{ fontSize: '12px', color: '#64748b', margin: '0', fontWeight: '600' }}>📍 {match.date} • {match.time} MT</p>
+                        {!canEdit && <span style={{ fontSize: '11px', background: '#fee2e2', color: '#991b1b', padding: '4px 8px', borderRadius: '4px', fontWeight: '600' }}>🔒 BLOQUEADA</span>}
+                        {canEdit && <span style={{ fontSize: '11px', background: '#dcfce7', color: '#166534', padding: '4px 8px', borderRadius: '4px', fontWeight: '600' }}>✅ ABIERTA</span>}
+                      </div>
+                      {!canEdit && <p style={{ fontSize: '11px', color: '#dc2626', margin: '0 0 12px', fontWeight: '600' }}>⏰ Predicción cerrada. El partido comienza en breve.</p>}
                       <div style={{ display: 'flex', alignItems: 'center', gap: '16px', marginBottom: '12px' }}>
                         <div style={{ textAlign: 'center', flex: 1 }}>
                           <p style={{ fontSize: '14px', fontWeight: '700', color: '#1e3a8a', margin: '0' }}>{homeTeam}</p>
@@ -569,11 +624,10 @@ const FIFA2026PoolApp = () => {
                           <p style={{ fontSize: '14px', fontWeight: '700', color: '#1e3a8a', margin: '0' }}>{awayTeam}</p>
                         </div>
                       </div>
-                      <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
-                        <input type="number" min="0" max="10" value={prediction?.home !== null && prediction?.home !== undefined ? prediction.home : ''} onChange={(e) => canEdit ? handlePrediction(match.id, e.target.value, prediction?.away || '') : null} disabled={!canEdit} placeholder="0" style={{ width: '60px', padding: '10px', border: '2px solid ' + (canEdit ? '#0070f3' : '#cbd5e1'), borderRadius: '8px', fontSize: '16px', textAlign: 'center', fontWeight: '700', backgroundColor: !canEdit ? '#f1f5f9' : 'white', cursor: canEdit ? 'pointer' : 'not-allowed' }} />
+                      <div style={{ display: 'flex', gap: '8px', alignItems: 'center', opacity: canEdit ? 1 : 0.6 }}>
+                        <input type="number" min="0" max="10" value={prediction?.home !== null && prediction?.home !== undefined ? prediction.home : ''} onChange={(e) => canEdit ? handlePrediction(match.id, e.target.value, prediction?.away || '') : null} disabled={!canEdit} placeholder="0" style={{ width: '60px', padding: '10px', border: '2px solid ' + (canEdit ? '#0070f3' : '#fca5a5'), borderRadius: '8px', fontSize: '16px', textAlign: 'center', fontWeight: '700', backgroundColor: !canEdit ? '#f1f5f9' : 'white', cursor: canEdit ? 'pointer' : 'not-allowed', color: canEdit ? '#000' : '#999' }} />
                         <span style={{ fontSize: '16px', fontWeight: '700', color: '#0070f3' }}>-</span>
-                        <input type="number" min="0" max="10" value={prediction?.away !== null && prediction?.away !== undefined ? prediction.away : ''} onChange={(e) => canEdit ? handlePrediction(match.id, prediction?.home || '', e.target.value) : null} disabled={!canEdit} placeholder="0" style={{ width: '60px', padding: '10px', border: '2px solid ' + (canEdit ? '#0070f3' : '#cbd5e1'), borderRadius: '8px', fontSize: '16px', textAlign: 'center', fontWeight: '700', backgroundColor: !canEdit ? '#f1f5f9' : 'white', cursor: canEdit ? 'pointer' : 'not-allowed' }} />
-                        {!canEdit && <span style={{ fontSize: '12px', color: '#ef4444', fontWeight: '600', marginLeft: 'auto' }}>🔒 Cerrada</span>}
+                        <input type="number" min="0" max="10" value={prediction?.away !== null && prediction?.away !== undefined ? prediction.away : ''} onChange={(e) => canEdit ? handlePrediction(match.id, prediction?.home || '', e.target.value) : null} disabled={!canEdit} placeholder="0" style={{ width: '60px', padding: '10px', border: '2px solid ' + (canEdit ? '#0070f3' : '#fca5a5'), borderRadius: '8px', fontSize: '16px', textAlign: 'center', fontWeight: '700', backgroundColor: !canEdit ? '#f1f5f9' : 'white', cursor: canEdit ? 'pointer' : 'not-allowed', color: canEdit ? '#000' : '#999' }} />
                       </div>
                     </div>
                   );
