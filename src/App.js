@@ -1,11 +1,34 @@
 import React, { useState, useEffect } from 'react';
 
 const FIFA2026PoolApp = () => {
-  const ADMIN_PASSWORD = 'admin2026';
+  const ADMIN_PASSWORD = 'FastM1nd2026';
   const TIMEZONE = 'America/Denver'; // Mountain Time
   
-  // Get current time in Mountain Time
-  const getCurrentTimeInMT = () => {
+  // Convert EDT/Eastern time match time to Mountain Time (subtract 2 hours)
+  const convertTimeToMT = (edtTime) => {
+    try {
+      // Parse EDT time
+      const [hours, minutes] = edtTime.split(':').map(Number);
+      
+      // Convert EDT to Mountain Time (subtract 2 hours for EDT to MDT)
+      let mtHours = hours - 2;
+      let mtMinutes = minutes;
+      
+      // Handle day wrap-around
+      if (mtHours < 0) {
+        mtHours += 24;
+      }
+      
+      // Format as HH:MM
+      const mtHour = String(mtHours).padStart(2, '0');
+      const mtMin = String(mtMinutes).padStart(2, '0');
+      
+      return `${mtHour}:${mtMin}`;
+    } catch (e) {
+      console.error('Error converting time:', e);
+      return edtTime;
+    }
+  };
     const now = new Date();
     const formatter = new Intl.DateTimeFormat('en-US', {
       timeZone: TIMEZONE,
@@ -32,22 +55,31 @@ const FIFA2026PoolApp = () => {
     };
   };
   
-  // Check if prediction is still open (1 hour BEFORE match starts)
-  const canMakePrediction = (matchDate, matchTime) => {
+  // Check if prediction is still open (1 hour BEFORE match starts in MT)
+  const canMakePrediction = (matchDate, edtTime) => {
     try {
       const currentMT = getCurrentTimeInMT();
       
-      // Parse match date and time
-      const [matchYear, matchMonth, matchDay] = matchDate.split('-');
-      const [matchHour, matchMinute] = matchTime.split(':');
+      // Parse EDT time (times are stored in EDT)
+      const [edtHours, edtMinutes] = edtTime.split(':').map(Number);
+      
+      // Convert EDT to MT by subtracting 2 hours
+      let mtHours = edtHours - 2;
+      let mtMinutes = edtMinutes;
+      
+      if (mtHours < 0) {
+        mtHours += 24;
+      }
       
       // Create match datetime in Mountain Time
-      const matchDateTime = new Date(`${matchYear}-${matchMonth}-${matchDay}T${matchHour}:${matchMinute}:00`);
+      const mtHourStr = String(mtHours).padStart(2, '0');
+      const mtMinStr = String(mtMinutes).padStart(2, '0');
+      const matchDateTime = new Date(`${matchDate}T${mtHourStr}:${mtMinStr}:00`);
       
       // Lock time is 1 hour BEFORE match
       const lockTime = new Date(matchDateTime.getTime() - (60 * 60 * 1000));
       
-      // Current time must be BEFORE lock time to allow edits
+      // Current time (in MT) must be BEFORE lock time to allow edits
       return currentMT.fullDate < lockTime;
     } catch (e) {
       console.error('Error checking prediction:', e);
@@ -539,7 +571,7 @@ const FIFA2026PoolApp = () => {
               return (
                 <div key={match.id} style={{ background: 'white', padding: '1.5rem', borderRadius: '12px', boxShadow: '0 2px 8px rgba(0,0,0,0.08)', borderLeft: '4px solid #0070f3' }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
-                    <p style={{ fontSize: '12px', color: '#64748b', margin: '0', fontWeight: '600' }}>📍 {match.date} • {match.time} MT</p>
+                    <p style={{ fontSize: '12px', color: '#64748b', margin: '0', fontWeight: '600' }}>📍 {match.date} • {convertTimeToMT(match.time)} MT</p>
                     {!canMakePrediction(match.date, match.time) && <span style={{ fontSize: '11px', background: '#fee2e2', color: '#991b1b', padding: '4px 8px', borderRadius: '4px', fontWeight: '600' }}>🔒 BLOQUEADA</span>}
                   </div>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '16px', marginBottom: '12px' }}>
@@ -611,7 +643,7 @@ const FIFA2026PoolApp = () => {
                   return (
                     <div key={match.id} style={{ background: 'white', padding: '1.5rem', borderRadius: '12px', boxShadow: '0 2px 8px rgba(0,0,0,0.08)', borderLeft: '4px solid ' + (canEdit ? '#0070f3' : '#ef4444') }}>
                       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
-                        <p style={{ fontSize: '12px', color: '#64748b', margin: '0', fontWeight: '600' }}>📍 {match.date} • {match.time} MT</p>
+                        <p style={{ fontSize: '12px', color: '#64748b', margin: '0', fontWeight: '600' }}>📍 {match.date} • {convertTimeToMT(match.time)} MT</p>
                         {!canEdit && <span style={{ fontSize: '11px', background: '#fee2e2', color: '#991b1b', padding: '4px 8px', borderRadius: '4px', fontWeight: '600' }}>🔒 BLOQUEADA</span>}
                         {canEdit && <span style={{ fontSize: '11px', background: '#dcfce7', color: '#166534', padding: '4px 8px', borderRadius: '4px', fontWeight: '600' }}>✅ ABIERTA</span>}
                       </div>
@@ -735,7 +767,7 @@ const FIFA2026PoolApp = () => {
                   const hasResult = match.homeScore !== null;
                   return (
                     <div key={match.id} style={{ background: hasResult ? '#dcfce7' : 'white', padding: '1.5rem', borderRadius: '12px', boxShadow: '0 2px 8px rgba(0,0,0,0.08)', borderLeft: '4px solid ' + (hasResult ? '#10b981' : '#0070f3') }}>
-                      <p style={{ fontSize: '12px', color: '#64748b', margin: '0 0 12px', fontWeight: '600' }}>📍 {match.date} • {match.time}</p>
+                      <p style={{ fontSize: '12px', color: '#64748b', margin: '0 0 12px', fontWeight: '600' }}>📍 {match.date} • {convertTimeToMT(match.time)} MT</p>
                       <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
                         {view === 'adminMatches' ? (
                           <>
