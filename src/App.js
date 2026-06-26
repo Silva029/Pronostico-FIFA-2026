@@ -29,6 +29,9 @@ const FIFA2026PoolApp = () => {
       return edtTime;
     }
   };
+  
+  // Get current time in Mountain Time
+  const getCurrentTimeInMT = () => {
     const now = new Date();
     const formatter = new Intl.DateTimeFormat('en-US', {
       timeZone: TIMEZONE,
