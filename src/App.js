@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 
 const FIFA2026PoolApp = () => {
+  const ADMIN_PASSWORD = 'admin2026';
   const TIMEZONE = 'America/Denver'; // Mountain Time
   
   // Get current time in Mountain Time
